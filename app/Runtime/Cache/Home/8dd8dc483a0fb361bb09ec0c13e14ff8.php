@@ -1,0 +1,37 @@
+<?php if (!defined('THINK_PATH')) exit();?><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>上传图片</title>
+    <link rel="stylesheet" href="/app/public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/app/public/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/app/public/css/base.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <form action="/index.php/Home/Index/upload" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="file">上传图片</label>
+                        <input type="file" name="photo">
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="上传" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+            <?php if(strlen($filepath) >= 1): ?><div class="col-md-12">
+                    <img src="<?php echo ($filepath); ?>" alt="">
+                </div><?php endif; ?>
+        </div>
+    </div>
+</body>
+<script src="/app/public/js/jquery-3.2.1.min.js"></script>
+<script>
+    $("img").click(function () {
+        $("#filetext", window.opener.document).val($(this).attr("src"));
+        window.close();
+    });
+</script>
+</html>
