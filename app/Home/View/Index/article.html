@@ -11,19 +11,37 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12" style="margin: 20px auto 20px;">
-                <button type="button" class="btn btn-info">增加信息</button>
+            <ol class="breadcrumb">
+              <li><a href="/index.php/Home/Index/allNews">管理信息</a></li>
+              <li><a href="#">关于我们</a></li>
+              <li class="active">信息列表</li>
+            </ol>
+                <a href="/index.php/Home/Index/allNews" class="btn btn-info">增加信息</a>
             </div>
             <div class="col-md-12">
-                <table class="table table-bordered table-hover add-news">
+                <table class="table table-bordered table-hover news-list">
                     <tbody>
-                    <tr><td class="col-md-1">标题</td><td class="col-md-11"><input type="text" name="title" class="form-control" placeholder="标题"></td></tr>
+                    <tr><td></td><td>ID</td><td class="col-md-1">标题</td><td>作者</td><td>时间</td><td>操作</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <div class="col-md-12">
+            <div class="col-md-12 edit-news">
+                <form class="from" method="post" enctype="multipart/form-data" action="/index.php/Home/Index/editNews">
+                    <table class="table table-bordered edit-news-table">
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="form-group">
+                        <input type="submit" value="提交" class="btn btn-primary">
+                        <input type="reset" value="重置" class="btn btn-danger">
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-md-12 add-news">
                 <form class="from" method="post" enctype="multipart/form-data" action="/index.php/Home/Index/addNews">
-                    <table class="table table-bordered add-news">
+                    <table class="table table-bordered">
                         <tbody>
                             <tr><td class="col-md-1">标题</td><td class="col-md-11"><input type="text" name="title" class="form-control" placeholder="标题"></td></tr>
                             <tr><td class="col-md-1">副标题</td><td class="col-md-11"><input type="text" name="ftitle" class="form-control" placeholder="副标题"></td></tr>
@@ -39,15 +57,69 @@
                         <input type="reset" value="重置" class="btn btn-danger">
                     </div>
                 </form>
-                <div class="news-list">
-                    <ul>
-                        <li>
-                            <a href=""></a>
-                        </li>
-                    </ul>
-                </div>
             </div>
         </div>
     </div>
+    <script src="/app/public/js/jquery-3.2.1.min.js"></script>
+    <script>
+        // $(".add-news").hide();
+        $.ajax({
+            url: "http://www.think.com/index.php/Home/Index/allNews",
+            data: {
+
+            },
+            type: "get",
+            dataType: "json",
+            success: function(data) {
+                if (data.success == true) {
+                    var shtml = '';
+                    $.each(data.data, function(key, value) {
+                        shtml += '<tr><td><input type="checkbox"></td><td>'+value.id+'</td><td class="col-md-1">'+value.title+'</td><td>作者</td><td>'+value.addtime+'</td><td><a data-id="'+value.id+'" class="editNews">修改</a> | <a data-id="'+value.id+'" class="deleteNews">删除</a></td></tr>';
+                    });
+                    $(".news-list tbody").append(shtml);
+                    $(".editNews").each(function(index) {
+                        $(".editNews").eq(index).click(function() {
+                            $(".edit-news-table tbody").html('');
+                            $.ajax({
+                                url: "http://www.think.com/index.php/Home/Index/editNews",
+                                data: {
+                                    id: $(".editNews").eq(index).attr("data-id")
+                                },
+                                type: "post",
+                                dataType: "json",
+                                success: function(data) {
+                                    if (data.success == true) {
+                                        var shtml = "";
+                                        $.each(data.editdata, function(key, value) {
+                                            shtml += '<tr><td class="col-md-1">标题</td><td class="col-md-11"><input type="text" name="title" class="form-control" placeholder="标题" value="'+value.title+'"></td></tr><tr><td class="col-md-1">副标题</td><td class="col-md-11"><input type="text" name="ftitle" class="form-control" placeholder="副标题" value="'+value.ftitle+'"></td></tr><tr><td class="col-md-1">特殊属性</td><td class="col-md-11"><input type="text" name="sattr" class="form-control" placeholder="特殊属性" value="'+value.sattr+'"></td></tr><tr><td class="col-md-1">标题图片</td><td class="col-md-11"><input type="text" value="'+value.titlepic+'" name="titlepic" id="filetext" style="height: 34px;width: 300px;border: 1px solid #ccc;border-radius: 5px;float: left;padding-left: 15px;" placeholder="标题图片"><span class="glyphicon glyphicon-picture upload" style="float: left;margin-top: 8px;display: inline-block;margin-left: 10px;"></span></td></tr><tr><td class="col-md-1">内容简介</td><td class="col-md-11"><input type="text" name="context" class="form-control" placeholder="内容简介" value="'+value.context+'"></td></tr><tr><td class="col-md-1">作者</td><td class="col-md-11"><input type="text" name="author" class="form-control" placeholder="作者"></td></tr><tr><td class="col-md-1">新闻正文</td><td class="col-md-11"><input type="text" name="content" class="form-control" placeholder="新闻正文" value="'+value.content+'"></td></tr>';
+                                        });
+                                        $(".edit-news-table tbody").append(shtml);
+                                        $(".upload").click(function() {
+                                            window.open("upload.html","newwindow","width=500,height=500,top=0,left=0");
+                                        });
+                                    }
+                                },
+                                error: function(jqXHR) {
+                                    alert(jqXHR.status);
+                                }
+                            });
+                        });
+                    });
+                }
+            },
+            error: function(jqXHR) {
+                alert(jqXHR.status);
+            }
+        });
+        // winLocal(".news-list", ".list", "/index.php/Home/Index/allNews");
+        function winLocal(el, child, url) {
+            if ($(el).find("tr").length < 3) {
+                $(child).hide();
+                window.location.href = url;
+            } else {
+                return;
+            }
+        }
+    </script>
 </body>
 </html>

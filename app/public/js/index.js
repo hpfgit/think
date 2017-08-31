@@ -1,6 +1,5 @@
-$("#myiframe").css({
-   "height":$("body").height()-$(".top").height()
+$(document).ready(function(){
+	$("#left").css({
+	   "height":$("html, body").height()
+	});
 });
-function JumpMenu(url) {
-    $("#myiframe").attr("src", url);
-}

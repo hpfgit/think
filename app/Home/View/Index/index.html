@@ -6,25 +6,69 @@
     <link rel="stylesheet" href="/app/public/css/bootstrap.min.css">
     <link rel="stylesheet" href="/app/public/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/app/public/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/app/public/css/index.css">
+    <script type="text/javascript">
+        function JumpMenu(url) {
+            document.getElementById("left").src = url;
+        }
+    </script>
 </head>
 <body>
-<div class="top clearfix">
-    <h1></h1>
-</div>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-1 main-left">
-            <div class="index"><span class="glyphicon glyphicon-home"></span><a onclick="JumpMenu('/app/Home/View/Index/adminmain.html')">后台首页</a></div>
-            <div class="article"><span class=" glyphicon glyphicon-duplicate"></span><a onclick="JumpMenu('/app/Home/View/Index/article.html')">文章管理</a></div>
-            <div class="system"><span class="glyphicon glyphicon-cog"></span><a onclick="JumpMenu('/app/Home/View/Index/set.html')">系统设置</a></div>
+        <div class="col-md-1" id="main-top">
+            <div class="main-nav-box" onclick="JumpMenu('__CONTROLLER__/system.html');">
+                <span class="font-icon glyphicon glyphicon-globe"></span>
+                <p>系统</p>
+            </div>
         </div>
-        <div class="col-md-11 main-right">
-            <iframe src="/app/Home/View/Index/adminmain.html" id="myiframe" frameborder="0" scrolling="auto" width="100%" height="100%"></iframe>
+        <div class="col-md-1 main-nav">
+            <div class="main-nav-box" onclick="JumpMenu('__CONTROLLER__/info.html');">
+                <span class="font-icon glyphicon glyphicon-list-alt"></span>
+                <p>信息</p>
+            </div>
+        </div>
+        <div class="col-md-1 main-nav">
+            <div class="main-nav-box" onclick="JumpMenu('__CONTROLLER__/column.html');">
+                <span class="font-icon glyphicon glyphicon-folder-open"></span>
+                <p>栏目</p>
+            </div>
         </div>
     </div>
 </div>
-<script src="/app/public/js/jquery-3.2.1.min.js"></script>
-<script src="/app/public/js/bootstrap.min.js"></script>
-<script src="/app/public/js/index.js"></script>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <iframe src="__CONTROLLER__/system.html" id="left" name="left" frameborder="0" scrolling="auto" width="100%"></iframe>
+        </div>
+        <div class="col-md-10">
+            <iframe src="__CONTROLLER__/adminmain.html" id="adminmain" name="adminmain" frameborder="0" scrolling="auto" width="100%"></iframe>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+window.onload = function(){
+    var left = document.getElementById("left");
+    var main = document.getElementById('adminmain');
+    var maintop = document.getElementById("main-top");
+    var maintoph = parseInt(getStyle(maintop, 'height'))+20;
+    left.style.height = (window.innerHeight-maintoph)+"px";
+    main.style.height = (window.innerHeight-maintoph)+"px";
+    window.onresize = function(){
+        left.style.height = (window.innerHeight-maintoph)+"px";
+        main.style.height = (window.innerHeight-maintoph)+"px";
+    };
+
+    function getStyle(el, attr) {
+        var str = "";
+        if (window.getComputedStyle !== 'undefined') {
+            str = window.getComputedStyle(el, null)[attr];
+        } else if (el.currentStyle !== 'undefined') {
+            str = el.currentStyle[attr];
+        }
+        return str;
+    }
+}
+</script>
 </body>
 </html>
